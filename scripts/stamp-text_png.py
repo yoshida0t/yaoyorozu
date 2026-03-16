@@ -39,7 +39,7 @@ def main():
         pos = ((bw - fw) // 2, int(bh*0.95) - fh)
     
     base.paste(formula, pos, formula)
-    base.save("output.png")
+    base.save(args.output)
 
 if __name__ == "__main__":
     main()

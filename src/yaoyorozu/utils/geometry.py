@@ -109,12 +109,29 @@ def write_xyz(file_path: str | Path, *, mole: MOLECULE, comment: str = "Generate
         f.write(f"{comment}\n")
 
         for atom, (x, y, z) in zip(mole.atoms, coords):
-            f.write(f"  {atom:<2} {x:14.8f} {y:14.8f} {z:14.8f}\n")
+            f.write(f"  {atom:<2} {x:18.10f} {y:18.10f} {z:18.10f}\n")
 
+def kabsch(*, target: MOLECULE, ref: MOLECULE) -> MOLECULE: 
+    P = np.array(target.coord)
+    Q = np.array(ref.coord)
 
+    Pg = np.mean(P, axis=0)
+    Qg = np.mean(Q, axis=0)
 
+    P = P - Pg
+    Q = Q - Qg
 
+    C = np.dot(P.T,Q)
+    V, S, Wt = np.linalg.svd(C)
+    d = np.sign(np.linalg.det(np.dot(V, Wt)))
+    D = np.diag([1, 1, d]) 
+    U = np.dot(np.dot(V, D), Wt) 
+    P=P@U
 
+    P = P + Qg
+    mole = MOLECULE(atoms=target.atoms,coord=P)
+
+    return mole
 
 
 def rotate(*, mole: MOLECULE, R: np.ndarray) -> MOLECULE:
