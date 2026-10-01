@@ -244,7 +244,8 @@ def main():
         label = p.name
         #label = label.split('.')[1]+label.split('.')[2] 
         if args.label=="name":
-            label = label.split('.')[1]+label.split('.')[2]
+            label = label.split('.')[2] 
+            #label = label
         else:
             label = args.label
         label = shorten_text(label, args.max_label_chars)
